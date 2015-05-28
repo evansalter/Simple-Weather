@@ -14,6 +14,12 @@
 		7D3D60051B0C3771008A43EE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D3D60041B0C3771008A43EE /* Images.xcassets */; };
 		7D3D60081B0C3771008A43EE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D3D60061B0C3771008A43EE /* LaunchScreen.xib */; };
 		7D3D60141B0C3771008A43EE /* WeatherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D60131B0C3771008A43EE /* WeatherTests.swift */; };
+		7D3D601E1B0C3BC2008A43EE /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D601D1B0C3BC2008A43EE /* Location.swift */; };
+		7D3F3AF41B151F9300A09B34 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3F3AF31B151F9300A09B34 /* StoreKit.framework */; };
+		7D5071881B0E355400E17A18 /* YQL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5071871B0E355400E17A18 /* YQL.swift */; };
+		7D5071901B0FD5AE00E17A18 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */; };
+		7DAAA1FA1B13C5EB0080BA85 /* ForecastTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */; };
+		7DCAAEE81B14E28700BFC8A7 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DCAAEE71B14E28700BFC8A7 /* iAd.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +44,12 @@
 		7D3D600D1B0C3771008A43EE /* WeatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D3D60121B0C3771008A43EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D3D60131B0C3771008A43EE /* WeatherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTests.swift; sourceTree = "<group>"; };
+		7D3D601D1B0C3BC2008A43EE /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		7D3F3AF31B151F9300A09B34 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		7D5071871B0E355400E17A18 /* YQL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YQL.swift; path = ../YQL.swift; sourceTree = "<group>"; };
+		7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastTableViewController.swift; sourceTree = "<group>"; };
+		7DCAAEE71B14E28700BFC8A7 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DCAAEE81B14E28700BFC8A7 /* iAd.framework in Frameworks */,
+				7D3F3AF41B151F9300A09B34 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +75,8 @@
 		7D3D5FED1B0C3771008A43EE = {
 			isa = PBXGroup;
 			children = (
+				7D3F3AF31B151F9300A09B34 /* StoreKit.framework */,
+				7DCAAEE71B14E28700BFC8A7 /* iAd.framework */,
 				7D3D5FF81B0C3771008A43EE /* Weather */,
 				7D3D60101B0C3771008A43EE /* WeatherTests */,
 				7D3D5FF71B0C3771008A43EE /* Products */,
@@ -79,10 +95,14 @@
 		7D3D5FF81B0C3771008A43EE /* Weather */ = {
 			isa = PBXGroup;
 			children = (
+				7D5071871B0E355400E17A18 /* YQL.swift */,
 				7D3D5FFB1B0C3771008A43EE /* AppDelegate.swift */,
 				7D3D5FFD1B0C3771008A43EE /* MasterViewController.swift */,
+				7D3D601D1B0C3BC2008A43EE /* Location.swift */,
 				7D3D5FFF1B0C3771008A43EE /* DetailViewController.swift */,
+				7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */,
 				7D3D60011B0C3771008A43EE /* Main.storyboard */,
+				7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */,
 				7D3D60041B0C3771008A43EE /* Images.xcassets */,
 				7D3D60061B0C3771008A43EE /* LaunchScreen.xib */,
 				7D3D5FF91B0C3771008A43EE /* Supporting Files */,
@@ -164,6 +184,12 @@
 				TargetAttributes = {
 					7D3D5FF51B0C3771008A43EE = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = B3H9A6ZEMS;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 					7D3D600C1B0C3771008A43EE = {
 						CreatedOnToolsVersion = 6.4;
@@ -171,7 +197,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7D3D5FF11B0C3771008A43EE /* Build configuration list for PBXProject "Weather" */;
+			buildConfigurationList = 7D3D5FF11B0C3771008A43EE /* Build configuration list for PBXProject "Simple Weather" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -216,7 +242,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D3D60001B0C3771008A43EE /* DetailViewController.swift in Sources */,
+				7DAAA1FA1B13C5EB0080BA85 /* ForecastTableViewController.swift in Sources */,
 				7D3D5FFE1B0C3771008A43EE /* MasterViewController.swift in Sources */,
+				7D5071901B0FD5AE00E17A18 /* SettingsTableViewController.swift in Sources */,
+				7D5071881B0E355400E17A18 /* YQL.swift in Sources */,
+				7D3D601E1B0C3BC2008A43EE /* Location.swift in Sources */,
 				7D3D5FFC1B0C3771008A43EE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -295,7 +325,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -333,7 +363,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -344,9 +374,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Weather/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -354,9 +388,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Weather/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -397,7 +435,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7D3D5FF11B0C3771008A43EE /* Build configuration list for PBXProject "Weather" */ = {
+		7D3D5FF11B0C3771008A43EE /* Build configuration list for PBXProject "Simple Weather" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7D3D60151B0C3771008A43EE /* Debug */,
@@ -413,6 +451,7 @@
 				7D3D60191B0C3771008A43EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7D3D601A1B0C3771008A43EE /* Build configuration list for PBXNativeTarget "WeatherTests" */ = {
 			isa = XCConfigurationList;
@@ -421,6 +460,7 @@
 				7D3D601C1B0C3771008A43EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

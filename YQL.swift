@@ -13,20 +13,29 @@ struct YQL {
     
     static func query(statement:String) -> NSDictionary? {
         
-        var escapedStatement = statement.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
-        let query = "\(prefix)\(escapedStatement!)"
-        
-        var results:NSDictionary? = nil
-        var jsonError:NSError? = nil
-        
-        let jsonData = NSData(contentsOfURL: NSURL(string: query)!, options: NSDataReadingOptions.DataReadingMappedIfSafe, error: &jsonError)
-        
-        if jsonData != nil {
-            results = NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) as! NSDictionary?
+        if IJReachability.isConnectedToNetwork() {
+            
+            var escapedStatement = statement.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+            let query = "\(prefix)\(escapedStatement!)"
+            
+            var results:NSDictionary? = nil
+            var jsonError:NSError? = nil
+            
+            let jsonData = NSData(contentsOfURL: NSURL(string: query)!, options: NSDataReadingOptions.DataReadingMappedIfSafe, error: &jsonError)
+            
+            if jsonData != nil {
+                results = NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) as! NSDictionary?
+            }
+            if jsonError != nil {
+                NSLog( "ERROR while fetching/deserializing YQL data. Message \(jsonError!)" )
+            }
+            return results
+            
         }
-        if jsonError != nil {
-            NSLog( "ERROR while fetching/deserializing YQL data. Message \(jsonError!)" )
+        else {
+            
+            return nil
+            
         }
-        return results
     }
 }

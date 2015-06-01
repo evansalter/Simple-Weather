@@ -147,7 +147,13 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
         let results = YQL.query("SELECT * FROM geo.places WHERE text=\"" + place + "\" and placetype = \"town\"|truncate(count=1)")
         var alertString = ""
         
-        if results?.valueForKeyPath("query.count") as! Double >= 1 {
+        if results == nil {
+            self.noNetworkErrorDialog()
+        }
+        else if count(place) < 4 {
+            self.fourCharactersErrorDialog()
+        }
+        else if results?.valueForKeyPath("query.count") as! Double >= 1 {
             let queryResults = results?.valueForKeyPath("query.results") as! NSDictionary?
             let cityName = queryResults?.valueForKeyPath("place.name") as! String
             let provName = queryResults?.valueForKeyPath("place.admin1.content") as! String
@@ -159,7 +165,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
 
         }
         else {
-            self.errorDialog()
+            self.cityNotFoundDialog()
         }
         
     }
@@ -237,11 +243,36 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
         
     }
     
-    func errorDialog() {
+    func fourCharactersErrorDialog() {
         
         let alertController = UIAlertController(title: "Error", message: "Please enter at least 4 characters.", preferredStyle: .Alert)
         
         let OKAction = UIAlertAction(title: "OK", style: .Default) { (aciton) in
+            self.insertNewObject(self)
+        }
+        alertController.addAction(OKAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+        
+    }
+    
+    func noNetworkErrorDialog() {
+        
+        let alertController = UIAlertController(title: "No Network Connection", message: "Please check your network connection and try again.", preferredStyle: .Alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .Default ) { (action) in
+        }
+        alertController.addAction(OKAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+        
+    }
+    
+    func cityNotFoundDialog() {
+        
+        let alertController = UIAlertController(title: "City Not Found", message: "Please check the spelling and try again.", preferredStyle: .Alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .Default ) { (action) in
             self.insertNewObject(self)
         }
         alertController.addAction(OKAction)

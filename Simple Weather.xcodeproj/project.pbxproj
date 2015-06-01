@@ -16,6 +16,7 @@
 		7D3D60141B0C3771008A43EE /* WeatherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D60131B0C3771008A43EE /* WeatherTests.swift */; };
 		7D3D601E1B0C3BC2008A43EE /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D601D1B0C3BC2008A43EE /* Location.swift */; };
 		7D3F3AF41B151F9300A09B34 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3F3AF31B151F9300A09B34 /* StoreKit.framework */; };
+		7D3FA7811B1CF17D00B682FB /* IJReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FA7801B1CF17D00B682FB /* IJReachability.swift */; };
 		7D5071881B0E355400E17A18 /* YQL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5071871B0E355400E17A18 /* YQL.swift */; };
 		7D5071901B0FD5AE00E17A18 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */; };
 		7DAAA1FA1B13C5EB0080BA85 /* ForecastTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */; };
@@ -46,6 +47,7 @@
 		7D3D60131B0C3771008A43EE /* WeatherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTests.swift; sourceTree = "<group>"; };
 		7D3D601D1B0C3BC2008A43EE /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		7D3F3AF31B151F9300A09B34 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		7D3FA7801B1CF17D00B682FB /* IJReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IJReachability.swift; sourceTree = "<group>"; };
 		7D5071871B0E355400E17A18 /* YQL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YQL.swift; path = ../YQL.swift; sourceTree = "<group>"; };
 		7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastTableViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				7D3D5FFF1B0C3771008A43EE /* DetailViewController.swift */,
 				7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */,
 				7D3D60011B0C3771008A43EE /* Main.storyboard */,
+				7D3FA7801B1CF17D00B682FB /* IJReachability.swift */,
 				7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */,
 				7D3D60041B0C3771008A43EE /* Images.xcassets */,
 				7D3D60061B0C3771008A43EE /* LaunchScreen.xib */,
@@ -244,6 +247,7 @@
 				7D3D60001B0C3771008A43EE /* DetailViewController.swift in Sources */,
 				7DAAA1FA1B13C5EB0080BA85 /* ForecastTableViewController.swift in Sources */,
 				7D3D5FFE1B0C3771008A43EE /* MasterViewController.swift in Sources */,
+				7D3FA7811B1CF17D00B682FB /* IJReachability.swift in Sources */,
 				7D5071901B0FD5AE00E17A18 /* SettingsTableViewController.swift in Sources */,
 				7D5071881B0E355400E17A18 /* YQL.swift in Sources */,
 				7D3D601E1B0C3BC2008A43EE /* Location.swift in Sources */,

@@ -20,6 +20,7 @@ class ForecastTableViewController: UITableViewController {
     var conditions: [String] = []
     var curTemp: String = ""
     var curCondition: String = ""
+    var windChill: String = ""
     var windDirDeg: Double = 0
     var windDirStr: String = ""
     var windSpeed: Int = 0
@@ -86,6 +87,7 @@ class ForecastTableViewController: UITableViewController {
         curCondition = queryResults?.valueForKeyPath("channel.item.condition.text") as! String
         windDirDeg = (queryResults?.valueForKeyPath("channel.wind.direction") as! NSString).doubleValue
         windSpeed = (queryResults?.valueForKeyPath("channel.wind.speed") as! NSString).integerValue
+        windChill = queryResults?.valueForKeyPath("channel.wind.chill") as! String
         
         if windDirDeg >= 337.5 || windDirDeg < 22.5 {
             windDirStr = "N"
@@ -188,6 +190,17 @@ class ForecastTableViewController: UITableViewController {
         }
 
     }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        
+        if indexPath.section == 0 {
+            return 132
+        }
+        else {
+            return 88
+        }
+        
+    }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
@@ -201,14 +214,42 @@ class ForecastTableViewController: UITableViewController {
             let conditionLabel = cell.contentView.viewWithTag(5) as! UILabel
             let tempLabel = cell.contentView.viewWithTag(6) as! UILabel
             let windLabel = cell.contentView.viewWithTag(7) as! UILabel
+            let windChillLabel = cell.contentView.viewWithTag(8) as! UILabel
+            let nowLabel = cell.contentView.viewWithTag(9) as! UILabel
 
             
             conditionLabel.text = curCondition
             tempLabel.text = curTemp + "°" + units
             windLabel.text = "Wind: " + windSpeed.description + " " + windUnits + " " + windDirStr
-
             
+            if windChill == curTemp {
+                windChillLabel.text = ""
+            }
+            else {
+                windChillLabel.text = "Feels like: " + windChill + "°" + units
+            }
+
             cell.selectionStyle = UITableViewCellSelectionStyle.None
+            
+            if detailItem!.image != nil {
+                conditionLabel.textColor = UIColor.whiteColor()
+                tempLabel.textColor = UIColor.whiteColor()
+                windLabel.textColor = UIColor.whiteColor()
+                windChillLabel.textColor = UIColor.whiteColor()
+                nowLabel.textColor = UIColor.whiteColor()
+                
+                let image: UIImage = (detailItem!.image as UIImage?)!
+                let imageView: UIImageView = UIImageView(image: image)
+                imageView.contentMode = .ScaleAspectFill
+                imageView.layer.masksToBounds = true
+                cell.backgroundView = imageView
+                
+                let overlay = CALayer()
+                overlay.frame = cell.bounds
+                overlay.backgroundColor = UIColor.blackColor().CGColor
+                overlay.opacity = 0.2
+                cell.layer.insertSublayer(overlay, atIndex: 1)
+            }
             
             return cell
             

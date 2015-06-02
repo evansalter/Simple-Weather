@@ -406,6 +406,16 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
+    
+    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        let item = allLocations[sourceIndexPath.row]
+        allLocations.removeAtIndex(sourceIndexPath.row)
+        allLocations.insert(item, atIndex: destinationIndexPath.row)
+    }
 
 
 }

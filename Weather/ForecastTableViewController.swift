@@ -79,15 +79,21 @@ class ForecastTableViewController: UITableViewController {
         let results = YQL.query("SELECT * FROM weather.forecast WHERE woeid=" + item.woeid + " and u=\"" + u + "\"")
         let queryResults = results?.valueForKeyPath("query.results") as! NSDictionary?
         
-        days = queryResults?.valueForKeyPath("channel.item.forecast.day") as! [String]
-        highs = queryResults?.valueForKeyPath("channel.item.forecast.high") as! [String]
-        lows = queryResults?.valueForKeyPath("channel.item.forecast.low") as! [String]
-        conditions = queryResults?.valueForKeyPath("channel.item.forecast.text") as! [String]
-        curTemp = queryResults?.valueForKeyPath("channel.item.condition.temp") as! String
-        curCondition = queryResults?.valueForKeyPath("channel.item.condition.text") as! String
-        windDirDeg = (queryResults?.valueForKeyPath("channel.wind.direction") as! NSString).doubleValue
-        windSpeed = (queryResults?.valueForKeyPath("channel.wind.speed") as! NSString).integerValue
-        windChill = queryResults?.valueForKeyPath("channel.wind.chill") as! String
+        if queryResults?.valueForKeyPath("channel.title") as! String == "Yahoo! Weather - Error" {
+            forecastErrorDialog()
+        }
+        else {
+            days = queryResults?.valueForKeyPath("channel.item.forecast.day") as! [String]
+            highs = queryResults?.valueForKeyPath("channel.item.forecast.high") as! [String]
+            lows = queryResults?.valueForKeyPath("channel.item.forecast.low") as! [String]
+            conditions = queryResults?.valueForKeyPath("channel.item.forecast.text") as! [String]
+            curTemp = queryResults?.valueForKeyPath("channel.item.condition.temp") as! String
+            curCondition = queryResults?.valueForKeyPath("channel.item.condition.text") as! String
+            windDirDeg = (queryResults?.valueForKeyPath("channel.wind.direction") as! NSString).doubleValue
+            windSpeed = (queryResults?.valueForKeyPath("channel.wind.speed") as! NSString).integerValue
+            windChill = queryResults?.valueForKeyPath("channel.wind.chill") as! String
+            
+        }
         
         if windDirDeg >= 337.5 || windDirDeg < 22.5 {
             windDirStr = "N"
@@ -114,6 +120,19 @@ class ForecastTableViewController: UITableViewController {
             windDirStr = "NW"
         }
 
+        
+    }
+    
+    func forecastErrorDialog() {
+        
+        let alertController = UIAlertController(title: "Error Getting Forecast", message: "There was an error getting the forecast.", preferredStyle: .Alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .Default) { (aciton) in
+            self.navigationController?.popViewControllerAnimated(true)
+        }
+        alertController.addAction(OKAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
         
     }
     

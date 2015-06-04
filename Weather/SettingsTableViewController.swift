@@ -8,8 +8,9 @@
 
 import UIKit
 import StoreKit
+import MessageUI
 
-class SettingsTableViewController: UITableViewController, SKProductsRequestDelegate, SKPaymentTransactionObserver {
+class SettingsTableViewController: UITableViewController, SKProductsRequestDelegate, SKPaymentTransactionObserver, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var IAPButton: UIButton!
     @IBOutlet weak var unitSelectorOutlet: UISegmentedControl!
@@ -83,19 +84,38 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
     
     // In-App Purchases
     
+    func noNetworkErrorDialog() {
+        
+        let alertController = UIAlertController(title: "No Network Connection", message: "Please check your network connection and try again.", preferredStyle: .Alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .Default ) { (action) in
+        }
+        alertController.addAction(OKAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+        
+    }
+    
     @IBAction func purchaseButtonPressed(sender: AnyObject) {
         
-        println("About to fetch the products")
-        // We check that we are allowed to make the purchase.
-        if SKPaymentQueue.canMakePayments() {
-            var productID:NSSet = NSSet(object: self.product_id!);
-            var productsRequest:SKProductsRequest = SKProductsRequest(productIdentifiers: productID as Set<NSObject>);
-            productsRequest.delegate = self as SKProductsRequestDelegate
-            productsRequest.start()
-            println("Fetching Products")
+        if IJReachability.isConnectedToNetwork() {
+        
+            println("About to fetch the products")
+            // We check that we are allowed to make the purchase.
+            if SKPaymentQueue.canMakePayments() {
+                var productID:NSSet = NSSet(object: self.product_id!);
+                var productsRequest:SKProductsRequest = SKProductsRequest(productIdentifiers: productID as Set<NSObject>);
+                productsRequest.delegate = self as SKProductsRequestDelegate
+                productsRequest.start()
+                println("Fetching Products")
+            }
+            else {
+                println("Cannot make purchases")
+            }
+            
         }
         else {
-            println("Cannot make purchases")
+            self.noNetworkErrorDialog()
         }
         
     }
@@ -174,6 +194,50 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
         self.navigationController?.setToolbarHidden(true, animated: false)
     }
     
+    @IBAction func supportButtonPressed(sender: UIBarButtonItem) {
+        
+        if MFMailComposeViewController.canSendMail() {
+            let mailComposeViewController = configuredMailComposeViewController()
+            self.presentViewController(mailComposeViewController, animated: true, completion: nil)
+        }
+        else {
+            self.noConfiguredAccountError()
+        }
+        
+    }
+    
+    func configuredMailComposeViewController() -> MFMailComposeViewController {
+        
+        let mailComposerVC = MFMailComposeViewController()
+        mailComposerVC.mailComposeDelegate = self
+        
+        mailComposerVC.setToRecipients(["support@evansalter.com"])
+        mailComposerVC.setSubject("Simple Weather Support")
+        mailComposerVC.setMessageBody("Enter your issue below...\n\n", isHTML: false)
+        
+        return mailComposerVC
+        
+    }
+    
+    func noConfiguredAccountError() {
+
+        let alertController = UIAlertController(title: "Can't send email", message: "Your device does not have any email accounts configured.  If you wish, you can visit our support page and submit your feedback there.", preferredStyle: .Alert)
+        
+        let OKAction = UIAlertAction(title: "Visit Support Page", style: .Default ) { (action) in
+            UIApplication.sharedApplication().openURL(NSURL(string: "http://evansalter.com/simple-weather-feedback/")!)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Default ) { (action) in
+        }
+        alertController.addAction(OKAction)
+        alertController.addAction(cancelAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+    
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
+    }
     
 
     // MARK: - Table view data source

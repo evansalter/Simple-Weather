@@ -158,7 +158,10 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
             let cityName = queryResults?.valueForKeyPath("place.name") as! String
             let provName = queryResults?.valueForKeyPath("place.admin1.content") as! String
             let countryName = queryResults?.valueForKeyPath("place.country.content") as! String
-            let woeid = queryResults?.valueForKeyPath("place.woeid") as! String
+            var woeid = queryResults?.valueForKeyPath("place.woeid") as! String
+            if woeid.toInt() == 91982014 {
+                woeid = "3369"
+            }
             
             alertString = "Would you like to add " + cityName + ", " + provName + ", " + countryName + "?"
             confirmationDialog(alertString, name: cityName, woeid: woeid)

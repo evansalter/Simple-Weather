@@ -77,49 +77,68 @@ class ForecastTableViewController: UITableViewController {
         }
         
         let results = YQL.query("SELECT * FROM weather.forecast WHERE woeid=" + item.woeid + " and u=\"" + u + "\"")
-        let queryResults = results?.valueForKeyPath("query.results") as! NSDictionary?
         
-        if queryResults?.valueForKeyPath("channel.title") as! String == "Yahoo! Weather - Error" {
-            forecastErrorDialog()
+        if results == nil {
+            self.noNetworkErrorDialog()
         }
         else {
-            days = queryResults?.valueForKeyPath("channel.item.forecast.day") as! [String]
-            highs = queryResults?.valueForKeyPath("channel.item.forecast.high") as! [String]
-            lows = queryResults?.valueForKeyPath("channel.item.forecast.low") as! [String]
-            conditions = queryResults?.valueForKeyPath("channel.item.forecast.text") as! [String]
-            curTemp = queryResults?.valueForKeyPath("channel.item.condition.temp") as! String
-            curCondition = queryResults?.valueForKeyPath("channel.item.condition.text") as! String
-            windDirDeg = (queryResults?.valueForKeyPath("channel.wind.direction") as! NSString).doubleValue
-            windSpeed = (queryResults?.valueForKeyPath("channel.wind.speed") as! NSString).integerValue
-            windChill = queryResults?.valueForKeyPath("channel.wind.chill") as! String
+            let queryResults = results?.valueForKeyPath("query.results") as! NSDictionary?
             
-        }
-        
-        if windDirDeg >= 337.5 || windDirDeg < 22.5 {
-            windDirStr = "N"
-        }
-        else if windDirDeg >= 22.5 && windDirDeg < 67.5 {
-            windDirStr = "NE"
-        }
-        else if windDirDeg >= 67.5 && windDirDeg < 112.5 {
-            windDirStr = "E"
-        }
-        else if windDirDeg >= 112.5 && windDirDeg < 157.5 {
-            windDirStr = "SE"
-        }
-        else if windDirDeg >= 157.5 && windDirDeg < 202.5 {
-            windDirStr = "S"
-        }
-        else if windDirDeg >= 202.5 && windDirDeg < 247.5 {
-            windDirStr = "SW"
-        }
-        else if windDirDeg >= 247.5 && windDirDeg < 292.5 {
-            windDirStr = "W"
-        }
-        else {
-            windDirStr = "NW"
+            if queryResults?.valueForKeyPath("channel.title") as! String == "Yahoo! Weather - Error" {
+                forecastErrorDialog()
+            }
+            else {
+                days = queryResults?.valueForKeyPath("channel.item.forecast.day") as! [String]
+                highs = queryResults?.valueForKeyPath("channel.item.forecast.high") as! [String]
+                lows = queryResults?.valueForKeyPath("channel.item.forecast.low") as! [String]
+                conditions = queryResults?.valueForKeyPath("channel.item.forecast.text") as! [String]
+                curTemp = queryResults?.valueForKeyPath("channel.item.condition.temp") as! String
+                curCondition = queryResults?.valueForKeyPath("channel.item.condition.text") as! String
+                windDirDeg = (queryResults?.valueForKeyPath("channel.wind.direction") as! NSString).doubleValue
+                windSpeed = (queryResults?.valueForKeyPath("channel.wind.speed") as! NSString).integerValue
+                windChill = queryResults?.valueForKeyPath("channel.wind.chill") as! String
+                
+            }
+            
+            if windDirDeg >= 337.5 || windDirDeg < 22.5 {
+                windDirStr = "N"
+            }
+            else if windDirDeg >= 22.5 && windDirDeg < 67.5 {
+                windDirStr = "NE"
+            }
+            else if windDirDeg >= 67.5 && windDirDeg < 112.5 {
+                windDirStr = "E"
+            }
+            else if windDirDeg >= 112.5 && windDirDeg < 157.5 {
+                windDirStr = "SE"
+            }
+            else if windDirDeg >= 157.5 && windDirDeg < 202.5 {
+                windDirStr = "S"
+            }
+            else if windDirDeg >= 202.5 && windDirDeg < 247.5 {
+                windDirStr = "SW"
+            }
+            else if windDirDeg >= 247.5 && windDirDeg < 292.5 {
+                windDirStr = "W"
+            }
+            else {
+                windDirStr = "NW"
+            }
         }
 
+        
+    }
+    
+    func noNetworkErrorDialog() {
+        
+        let alertController = UIAlertController(title: "No Network Connection", message: "Please check your network connection and try again.", preferredStyle: .Alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .Default ) { (action) in
+            self.navigationController?.popViewControllerAnimated(true)
+        }
+        alertController.addAction(OKAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
         
     }
     

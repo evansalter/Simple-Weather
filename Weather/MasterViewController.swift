@@ -12,7 +12,7 @@ import iAd
 class MasterViewController: UITableViewController, ADBannerViewDelegate {
     
     var objects = [AnyObject]()
-    var bannerView:ADBannerView?
+    var bannerView = ADBannerView(adType: ADAdType.Banner)
     var IAPPurchased:Bool?
 
 
@@ -27,17 +27,20 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
         
         //iAd banner
         if IAPPurchased == nil || IAPPurchased == false {
-            bannerView?.hidden = false
+            bannerView.hidden = false
             self.canDisplayBannerAds = true
         }
         else {
             self.canDisplayBannerAds = false
-            bannerView?.removeFromSuperview()
-            bannerView?.hidden = true
-            bannerView = nil
+            //bannerView?.removeFromSuperview()
+            bannerView.hidden = true
+            //bannerView = nil
         }
-        self.bannerView?.delegate = self
-        self.bannerView?.hidden = true
+        self.bannerView.delegate = self
+        self.bannerView.hidden = true
+        
+        println(self.bannerView.bounds.height.description)
+        self.bannerView.bounds = CGRect(x: 0.0, y: 0.0, width: self.bannerView.bounds.width, height: 22.0)
         
         Location.loadLocations()
         locationTable = self.tableView
@@ -56,7 +59,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
         
         if IAPPurchased != nil && IAPPurchased == true {
             self.canDisplayBannerAds = false
-            bannerView?.removeFromSuperview()
+            //bannerView?.removeFromSuperview()
             bannerView?.hidden = true
             bannerView = nil
         }
@@ -156,14 +159,17 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
         else if results?.valueForKeyPath("query.count") as! Double >= 1 {
             let queryResults = results?.valueForKeyPath("query.results") as! NSDictionary?
             let cityName = queryResults?.valueForKeyPath("place.name") as! String
-            let provName = queryResults?.valueForKeyPath("place.admin1.content") as! String
             let countryName = queryResults?.valueForKeyPath("place.country.content") as! String
             var woeid = queryResults?.valueForKeyPath("place.woeid") as! String
             if woeid.toInt() == 91982014 {
                 woeid = "3369"
             }
-            
-            alertString = "Would you like to add " + cityName + ", " + provName + ", " + countryName + "?"
+            if let provName = queryResults?.valueForKeyPath("place.admin1.content") as? String {
+                alertString = "Would you like to add " + cityName + ", " + provName + ", " + countryName + "?"
+            }
+            else {
+                alertString = "Would you like to add " + cityName + ", " + countryName + "?"
+            }
             confirmationDialog(alertString, name: cityName, woeid: woeid)
 
         }
@@ -304,6 +310,8 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
         
+        let curCell: UITableViewCell = self.tableView.cellForRowAtIndexPath(indexPath)!
+        
         let queue = NSOperationQueue()
         queue.addOperationWithBlock() {
         
@@ -311,7 +319,6 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
             let url = dict?.valueForKey("url") as! String
         
             if url != "" {
-                let curCell: UITableViewCell = self.tableView.cellForRowAtIndexPath(indexPath)!
                 let imageData = NSData(contentsOfURL: NSURL(string: url as String)!)
                 let image: UIImage = UIImage(data: imageData!)!
                 let imageView: UIImageView = UIImageView(image: image)

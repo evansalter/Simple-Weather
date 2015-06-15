@@ -20,6 +20,8 @@
 		7D5071901B0FD5AE00E17A18 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */; };
 		7DAAA1FA1B13C5EB0080BA85 /* ForecastTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */; };
 		7DCAAEE81B14E28700BFC8A7 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DCAAEE71B14E28700BFC8A7 /* iAd.framework */; };
+		7DF3C5F41B2F6C3400B91125 /* ResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF3C5F31B2F6C3400B91125 /* ResultsTableViewController.swift */; };
+		7DF3C5F61B2F7A0300B91125 /* WriteBackProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF3C5F51B2F7A0300B91125 /* WriteBackProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,8 @@
 		7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastTableViewController.swift; sourceTree = "<group>"; };
 		7DCAAEE71B14E28700BFC8A7 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		7DF3C5F31B2F6C3400B91125 /* ResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsTableViewController.swift; sourceTree = "<group>"; };
+		7DF3C5F51B2F7A0300B91125 /* WriteBackProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteBackProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,8 @@
 				7D3D5FFF1B0C3771008A43EE /* DetailViewController.swift */,
 				7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */,
 				7D3D60011B0C3771008A43EE /* Main.storyboard */,
+				7DF3C5F31B2F6C3400B91125 /* ResultsTableViewController.swift */,
+				7DF3C5F51B2F7A0300B91125 /* WriteBackProtocol.swift */,
 				7D3FA7801B1CF17D00B682FB /* IJReachability.swift */,
 				7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */,
 				7D3D60041B0C3771008A43EE /* Images.xcassets */,
@@ -179,6 +185,7 @@
 		7D3D5FEE1B0C3771008A43EE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Evan Salter";
 				TargetAttributes = {
@@ -240,12 +247,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DF3C5F61B2F7A0300B91125 /* WriteBackProtocol.swift in Sources */,
 				7D3D60001B0C3771008A43EE /* DetailViewController.swift in Sources */,
 				7DAAA1FA1B13C5EB0080BA85 /* ForecastTableViewController.swift in Sources */,
 				7D3D5FFE1B0C3771008A43EE /* MasterViewController.swift in Sources */,
 				7D3FA7811B1CF17D00B682FB /* IJReachability.swift in Sources */,
 				7D5071901B0FD5AE00E17A18 /* SettingsTableViewController.swift in Sources */,
 				7D5071881B0E355400E17A18 /* YQL.swift in Sources */,
+				7DF3C5F41B2F6C3400B91125 /* ResultsTableViewController.swift in Sources */,
 				7D3D601E1B0C3BC2008A43EE /* Location.swift in Sources */,
 				7D3D5FFC1B0C3771008A43EE /* AppDelegate.swift in Sources */,
 			);

@@ -9,11 +9,13 @@
 import UIKit
 import iAd
 
-class MasterViewController: UITableViewController, ADBannerViewDelegate {
+class MasterViewController: UITableViewController, ADBannerViewDelegate, writeValueBackDelegate {
     
     var objects = [AnyObject]()
     var bannerView = ADBannerView(adType: ADAdType.Banner)
     var IAPPurchased:Bool?
+    
+    var resultsToPass: NSDictionary = NSDictionary()
 
 
     override func awakeFromNib() {
@@ -147,7 +149,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
     
     func getPlaceName(place: String) {
         
-        let results = YQL.query("SELECT * FROM geo.places WHERE text=\"" + place + "\" and placetype = \"town\"|truncate(count=1)")
+        let results = YQL.query("SELECT * FROM geo.places WHERE text=\"" + place + "\" and placetype = \"town\"")
         var alertString = ""
         
         if results == nil {
@@ -156,7 +158,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
         else if count(place) < 4 {
             self.fourCharactersErrorDialog()
         }
-        else if results?.valueForKeyPath("query.count") as! Double >= 1 {
+        else if results?.valueForKeyPath("query.count") as! Double == 1 {
             let queryResults = results?.valueForKeyPath("query.results") as! NSDictionary?
             let cityName = queryResults?.valueForKeyPath("place.name") as! String
             let countryName = queryResults?.valueForKeyPath("place.country.content") as! String
@@ -172,6 +174,11 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
             }
             confirmationDialog(alertString, name: cityName, woeid: woeid)
 
+        }
+        else if results?.valueForKeyPath("query.count") as! Double > 1 {
+            let VC: AnyObject? = self.navigationController?.childViewControllers[0]
+            resultsToPass = results!
+            VC?.performSegueWithIdentifier("showResultsList", sender: self)
         }
         else {
             self.cityNotFoundDialog()
@@ -352,6 +359,26 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
 
         
     }
+    
+    func writeValueBack(name: String, woeid: String) {
+        
+        var found: Bool = false
+        for l in allLocations {
+            if l.woeid == woeid {
+                found = true
+            }
+        }
+        if found {
+            //ERROR: Already added
+            let alertString = name + " has already been added."
+            self.cityExistsDialog(alertString)
+        }
+        else {
+            self.addLocation(name, woeid: woeid)
+            Location.saveLocations()
+        }
+        
+    }
 
     // MARK: - Segues
 
@@ -361,6 +388,11 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate {
                 let object = allLocations[indexPath.row]
             (segue.destinationViewController as! ForecastTableViewController).detailItem = object
             }
+        }
+        else if segue.identifier == "showResultsList" {
+            let destinationVC = segue.destinationViewController as! ResultsTableViewController
+            destinationVC.delegate = self
+            destinationVC.results = resultsToPass
         }
     }
 

@@ -371,6 +371,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         if found {
             //ERROR: Already added
             let alertString = name + " has already been added."
+            self.navigationController?.popToRootViewControllerAnimated(true)
             self.cityExistsDialog(alertString)
         }
         else {

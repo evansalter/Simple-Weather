@@ -55,6 +55,7 @@ class ResultsTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("basicCell", forIndexPath: indexPath) as! UITableViewCell
+        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
 
         // Configure the cell...
         

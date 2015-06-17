@@ -12,7 +12,7 @@ class ResultsTableViewController: UITableViewController {
     
     var results: NSDictionary?
     var names: [String]?
-    var provs: [String]?
+    var provs: NSArray = NSArray()
     var countries: [String]?
     var woeids: [String]?
     
@@ -22,7 +22,7 @@ class ResultsTableViewController: UITableViewController {
         super.viewDidLoad()
         
         names = results?.valueForKeyPath("query.results.place.name") as? [String]
-        provs = results?.valueForKeyPath("query.results.place.admin1.content") as? [String]
+        provs = results?.valueForKeyPath("query.results.place.admin1.content") as! NSArray
         countries = results?.valueForKeyPath("query.results.place.country.content") as? [String]
         woeids = results?.valueForKeyPath("query.results.place.woeid") as? [String]
         
@@ -59,10 +59,15 @@ class ResultsTableViewController: UITableViewController {
         // Configure the cell...
         
         let name = names?[indexPath.row]
-        let prov = provs?[indexPath.row]
+        let prov: String? = provs[indexPath.row] as? String
         let country = countries?[indexPath.row]
         
-        cell.textLabel?.text = name! + ", " + prov! + ", " + country!
+        if prov == nil {
+            cell.textLabel?.text = name! + ", " + country!
+        }
+        else {
+            cell.textLabel?.text = name! + ", " + prov! + ", " + country!
+        }
 
         return cell
     }

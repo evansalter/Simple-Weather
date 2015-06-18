@@ -158,6 +158,8 @@ class ForecastTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        copyrightLabel.hidden = true
+        
         let queue = NSOperationQueue()
         queue.addOperationWithBlock() {
             self.getForecast()
@@ -168,6 +170,7 @@ class ForecastTableViewController: UITableViewController {
                 let indexSet: NSIndexSet = NSIndexSet(indexesInRange: range)
                 self.tableView.reloadSections(indexSet, withRowAnimation: UITableViewRowAnimation.Automatic)
                 self.tableView.reloadData()
+                self.copyrightLabel.hidden = false
                 
             }
             

@@ -13,6 +13,7 @@ import MessageUI
 class SettingsTableViewController: UITableViewController, SKProductsRequestDelegate, SKPaymentTransactionObserver, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var IAPButton: UIButton!
+    @IBOutlet weak var restoreButton: UIButton!
     @IBOutlet weak var unitSelectorOutlet: UISegmentedControl!
     var IAPPurchased: Bool?
     
@@ -32,10 +33,12 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
         if IAPPurchased == nil || IAPPurchased == false {
             IAPButton.setTitle("Purchase", forState: UIControlState.Normal)
             IAPButton.enabled = true
+            restoreButton.enabled = true
         }
         else {
             IAPButton.setTitle("Already Purchased", forState: UIControlState.Normal)
             IAPButton.enabled = false
+            restoreButton.enabled = false
         }
         
         self.tableView.allowsSelection = false
@@ -96,6 +99,25 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
         
     }
     
+    @IBAction func restoreButtonPressed(sender: AnyObject) {
+        
+        if IJReachability.isConnectedToNetwork() {
+        
+            if (SKPaymentQueue.canMakePayments()) {
+                SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+            }
+            else {
+                println("Cannot make purchases")
+            }
+            
+        }
+        else {
+            self.noNetworkErrorDialog()
+        }
+        
+    }
+    
+    
     @IBAction func purchaseButtonPressed(sender: AnyObject) {
         
         if IJReachability.isConnectedToNetwork() {
@@ -154,7 +176,6 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
             if let trans:SKPaymentTransaction = transaction as? SKPaymentTransaction {
                 switch trans.transactionState {
                 case .Purchased:
-                    //TODO: Implement purchased action
                     IAPPurchased = true
                     saveSettings()
                     //self.tableView.reloadData()
@@ -179,7 +200,9 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
                     viewDidLoad()
                     SKPaymentQueue.defaultQueue().finishTransaction(transaction as! SKPaymentTransaction)
                     
+                    break;
                 default:
+                    //SKPaymentQueue.defaultQueue().finishTransaction(transaction as! SKPaymentTransaction)
                     break;
                 }
             }

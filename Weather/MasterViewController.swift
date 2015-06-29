@@ -11,13 +11,23 @@ import iAd
 
 class MasterViewController: UITableViewController, ADBannerViewDelegate, writeValueBackDelegate {
     
-    var objects = [AnyObject]()
+    // ******************
+    // MARK: - Properties
+    // ******************
+
+    // iAd banner view
     var bannerView = ADBannerView(adType: ADAdType.Banner)
+    
+    // Bool stating whether the in-app purchase to remove ads has been purchased
     var IAPPurchased:Bool?
     
+    // Results object returned from YQL request to be passed to the results view controller
     var resultsToPass: NSDictionary = NSDictionary()
 
-
+    // ******************
+    // MARK: - View Setup
+    // ******************
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -34,15 +44,13 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         }
         else {
             self.canDisplayBannerAds = false
-            //bannerView?.removeFromSuperview()
             bannerView.hidden = true
-            //bannerView = nil
         }
         self.bannerView.delegate = self
         self.bannerView.hidden = true
         
-        println(self.bannerView.bounds.height.description)
-        self.bannerView.bounds = CGRect(x: 0.0, y: 0.0, width: self.bannerView.bounds.width, height: 22.0)
+//        println(self.bannerView.bounds.height.description)
+//        self.bannerView.bounds = CGRect(x: 0.0, y: 0.0, width: self.bannerView.bounds.width, height: 22.0)
         
         Location.loadLocations()
         locationTable = self.tableView
@@ -80,6 +88,25 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         // Dispose of any resources that can be recreated.
     }
     
+    /**
+        Loads the in-app purchase indicator from user defaults
+    
+        :returns: true if IAP has been purchased, false otherwise
+    */
+    func loadSettings() -> Bool {
+        
+        var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        if var savedData:Bool = (defaults.objectForKey("IAP") as? Bool) {
+            return savedData
+        }
+        else {
+            return false
+        }
+        
+    }
+    
+    // MARK: - iAd
+    
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         
         if IAPPurchased != nil && IAPPurchased == true {
@@ -98,23 +125,15 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         self.bannerView?.hidden = true
     }
     
-    func loadSettings() -> Bool {
-        
-        var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        if var savedData:Bool = (defaults.objectForKey("IAP") as? Bool) {
-            return savedData
-        }
-        else {
-            return false
-        }
-        
-    }
+    // ************************
+    // MARK: - Adding Locations
+    // ************************
 
+    /**
+        Inserts a new location into the location list.
+        Called when the plus button is tapped
+    */
     func insertNewObject(sender: AnyObject) {
-//        allLocations.insert("test", atIndex: 0)
-//        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-//        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-//        self.performSegueWithIdentifier("showDetail", sender: self)
         
         let alertController = UIAlertController(title: "Add City", message: "Search for a city below.", preferredStyle: .Alert)
         
@@ -147,6 +166,16 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         
     }
     
+    /**
+        Searches the YQL geo database using the string entered to find the proper pace name.
+        
+        Outcomes:
+    
+        - If one location is returned, a confirmation dialog appears to confirm it is the correct location
+        - If multiple locations are returned, a list showing them all appears and the user selects the correct one
+    
+        :param: place String containing the input from the user
+    */
     func getPlaceName(place: String) {
         
         let results = YQL.query("SELECT * FROM geo.places WHERE text=\"" + place + "\" and placetype = \"town\"")
@@ -186,6 +215,13 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         
     }
     
+    /**
+        Finds an image from Flickr for the newly added location based on image title, usage license, and tags.  The results are sorted by interestingness and the top one is used.
+    
+        :param: place String containing the name of the location
+    
+        :returns: NSDictionary containing url, author, name, ID, and author ID of the photo.  If no photo was found, all fields in the NSDictionary are empty
+    */
     func getImage(place: String) -> NSDictionary? {
         
         // let results = YQL.query("SELECT * FROM flickr.photos.search WHERE api_key=\"5182195e863cee6875590c57b381657f\" and text=\"" + place + "\" and license=\"4\" | truncate(count=1)")
@@ -215,8 +251,6 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
             
             return dict
             
-            //return url
-            
         }
         
         let dict: NSDictionary = NSDictionary(dictionary: ["url":"", "photoAuthor":"", "photoName":"", "photoID":"", "photoAuthorID":""])
@@ -225,6 +259,19 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
     
     }
     
+    /**
+        Dialog to confirm adding a city.  This appears when only one result it returned from the city search.
+    
+        Contents:
+    
+        - String asking the user to confirm it is the right location (city name, province/state, country)
+        - "Add" button
+        - "Cancel" button
+    
+        :param: alertString String containing message to display to the user
+        :param: name String containing the name of the city
+        :param: woeid String containing the woeid of the city
+    */
     func confirmationDialog(alertString: String, name: String, woeid: String) {
         
         let alertController = UIAlertController(title: "Confirmation", message: alertString, preferredStyle: .Alert)
@@ -258,6 +305,64 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         self.presentViewController(alertController, animated: true, completion: nil)
         
     }
+    
+    /**
+        Adds the selected city to the table and loads in the image
+    
+        :param: name String containing the name of the city
+        :param: woeid String containing the woeid of the city
+    */
+    func addLocation(name: String, woeid: String) {
+        
+        let location = Location(newName: name, newWoeid: woeid)
+        allLocations.insert(location, atIndex: 0)
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        
+        let curCell: UITableViewCell = self.tableView.cellForRowAtIndexPath(indexPath)!
+        
+        let queue = NSOperationQueue()
+        queue.addOperationWithBlock() {
+            
+            let dict = self.getImage(name)
+            let url = dict?.valueForKey("url") as! String
+            
+            if url != "" {
+                let imageData = NSData(contentsOfURL: NSURL(string: url as String)!)
+                let image: UIImage = UIImage(data: imageData!)!
+                let imageView: UIImageView = UIImageView(image: image)
+                imageView.contentMode = .ScaleAspectFill
+                imageView.layer.masksToBounds = true
+                curCell.backgroundView = imageView
+                location.image = image
+                location.photoAuthor = dict?.valueForKey("photoAuthor") as! String
+                location.photoAuthorID = dict?.valueForKey("photoAuthorID") as! String
+                location.photoID = dict?.valueForKey("photoID") as! String
+                location.photoName = dict?.valueForKey("photoName") as! String
+                location.url = dict?.valueForKey("url") as! String
+            }
+            else {
+                location.image = nil
+                location.photoAuthor = ""
+                location.photoAuthorID = ""
+                location.photoID = ""
+                location.photoName = ""
+                location.url = ""
+            }
+            
+            NSOperationQueue.mainQueue().addOperationWithBlock() {
+                
+                self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Automatic)
+                Location.saveLocations()
+                
+            }
+            
+        }
+        
+        
+    }
+    
+    // MARK: - Error Dialogs
     
     func fourCharactersErrorDialog() {
         
@@ -310,54 +415,20 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         
     }
     
-    func addLocation(name: String, woeid: String) {
-        
-        let location = Location(newName: name, newWoeid: woeid)
-        allLocations.insert(location, atIndex: 0)
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-        
-        let curCell: UITableViewCell = self.tableView.cellForRowAtIndexPath(indexPath)!
-        
-        let queue = NSOperationQueue()
-        queue.addOperationWithBlock() {
-        
-            let dict = self.getImage(name)
-            let url = dict?.valueForKey("url") as! String
-        
-            if url != "" {
-                let imageData = NSData(contentsOfURL: NSURL(string: url as String)!)
-                let image: UIImage = UIImage(data: imageData!)!
-                let imageView: UIImageView = UIImageView(image: image)
-                imageView.contentMode = .ScaleAspectFill
-                imageView.layer.masksToBounds = true
-                curCell.backgroundView = imageView
-                location.image = image
-                location.photoAuthor = dict?.valueForKey("photoAuthor") as! String
-                location.photoAuthorID = dict?.valueForKey("photoAuthorID") as! String
-                location.photoID = dict?.valueForKey("photoID") as! String
-                location.photoName = dict?.valueForKey("photoName") as! String
-                location.url = dict?.valueForKey("url") as! String
-            }
-            else {
-                location.image = nil
-                location.photoAuthor = ""
-                location.photoAuthorID = ""
-                location.photoID = ""
-                location.photoName = ""
-                location.url = ""
-            }
-            
-            NSOperationQueue.mainQueue().addOperationWithBlock() {
-                
-                self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Automatic)
-                Location.saveLocations()
-                
-            }
-            
-        }
+    // MARK: - Segues
 
-        
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showDetail" {
+            if let indexPath = self.tableView.indexPathForSelectedRow() {
+                let object = allLocations[indexPath.row]
+            (segue.destinationViewController as! ForecastTableViewController).detailItem = object
+            }
+        }
+        else if segue.identifier == "showResultsList" {
+            let destinationVC = segue.destinationViewController as! ResultsTableViewController
+            destinationVC.delegate = self
+            destinationVC.results = resultsToPass
+        }
     }
     
     func writeValueBack(name: String, woeid: String) {
@@ -379,22 +450,6 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
             Location.saveLocations()
         }
         
-    }
-
-    // MARK: - Segues
-
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow() {
-                let object = allLocations[indexPath.row]
-            (segue.destinationViewController as! ForecastTableViewController).detailItem = object
-            }
-        }
-        else if segue.identifier == "showResultsList" {
-            let destinationVC = segue.destinationViewController as! ResultsTableViewController
-            destinationVC.delegate = self
-            destinationVC.results = resultsToPass
-        }
     }
 
     // MARK: - Table View
@@ -458,6 +513,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         let item = allLocations[sourceIndexPath.row]
         allLocations.removeAtIndex(sourceIndexPath.row)
         allLocations.insert(item, atIndex: destinationIndexPath.row)
+        Location.saveLocations()
     }
 
 

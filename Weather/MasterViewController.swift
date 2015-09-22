@@ -105,7 +105,51 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         
     }
     
+    // ********************
+    // MARK: - Share Button
+    // ********************
+    
+    @IBAction func shareButtonPressed(sender: AnyObject) {
+        
+        let alertVC = UIAlertController(title: "Share the love", message: "Tell your friends about Simple Weather!", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Keep it a secret", style: UIAlertActionStyle.Cancel, handler: nil)
+        let shareAction = UIAlertAction(title: "Tell the world!", style: UIAlertActionStyle.Default) { (_) in
+            self.socialShare()
+        }
+        
+        alertVC.addAction(cancelAction)
+        alertVC.addAction(shareAction)
+        
+        self.presentViewController(alertVC, animated: true, completion: nil)
+        
+    }
+    
+    func socialShare() {
+        
+        let textToShare = "Check out this great weather app, Simple Weather!"
+        
+        if let websiteToShare = NSURL(string: "https://appsto.re/ca/JqGH7.i") {
+            
+            let objectsToShare = [textToShare, websiteToShare]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            activityVC.excludedActivityTypes = [UIActivityTypePrint,
+                UIActivityTypeAssignToContact,
+                UIActivityTypeSaveToCameraRoll,
+                UIActivityTypeAddToReadingList,
+                UIActivityTypePostToFlickr,
+                UIActivityTypePostToVimeo]
+            
+            self.presentViewController(activityVC, animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    // ***********
     // MARK: - iAd
+    // ***********
     
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         

@@ -10,6 +10,9 @@ import UIKit
 
 class ResultsTableViewController: UITableViewController {
     
+    // ******************
+    // MARK: - Properties
+    // ******************
     var results: NSDictionary?
     var names: [String]?
     var provs: NSArray = NSArray()
@@ -18,6 +21,9 @@ class ResultsTableViewController: UITableViewController {
     
     var delegate: writeValueBackDelegate?
 
+    // ************
+    // MARK: - Misc
+    // ************
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,8 +45,9 @@ class ResultsTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    // ******************************
     // MARK: - Table view data source
-
+    // ******************************
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.

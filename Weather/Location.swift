@@ -16,6 +16,9 @@ let kAllLocations = "locations"
 
 class Location: NSObject {
     
+    // ******************
+    // MARK: - Properties
+    // ******************
     var name: String
     var woeid: String
     var image: UIImage?
@@ -26,6 +29,9 @@ class Location: NSObject {
     var photoAuthorID: String
     var url: String
     
+    // ********************
+    // MARK: - init Methods
+    // ********************
     override init() {
         name = ""
         woeid = ""
@@ -52,6 +58,9 @@ class Location: NSObject {
         
     }
     
+    // *********************
+    // MARK: - User Defaults
+    // *********************
     func dictionary() -> NSDictionary {
         if image == nil {
             return["name":name,"woeid":woeid]

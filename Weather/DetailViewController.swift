@@ -10,6 +10,9 @@ import UIKit
 
 class DetailViewController: UITableViewController {
 
+    // ******************
+    // MARK: - Properties
+    // ******************
     @IBOutlet weak var detailDescriptionLabel: UILabel!
     var item: Location = Location()
     
@@ -21,6 +24,9 @@ class DetailViewController: UITableViewController {
         }
     }
     
+    // ****************
+    // MARK: - Settings
+    // ****************
     func loadSettings() -> Int {
         
         var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
@@ -33,6 +39,9 @@ class DetailViewController: UITableViewController {
         
     }
     
+    // ****************
+    // MARK: - Forecast
+    // ****************
     func getForecast() -> [String] {
         
         let u: String
@@ -55,6 +64,9 @@ class DetailViewController: UITableViewController {
         
     }
 
+    // *******************
+    // MARK: - View Config
+    // *******************
     func configureView() {
         // Update the user interface for the detail item.
         if let detail: Location = self.detailItem {

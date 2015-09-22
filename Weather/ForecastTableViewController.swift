@@ -10,6 +10,9 @@ import UIKit
 
 class ForecastTableViewController: UITableViewController {
 
+    // ******************
+    // MARK: - Properties
+    // ******************
     @IBOutlet weak var copyrightLabel: UILabel!
     @IBOutlet weak var copyrightButtonOutlet: UIButton!
     
@@ -35,10 +38,53 @@ class ForecastTableViewController: UITableViewController {
         }
     }
     
+    // *******************
+    // MARK: - View config
+    // *******************
     func configureView() {
         
         self.title = detailItem?.name
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Help", style: UIBarButtonItemStyle.Plain, target: self, action: "helpButtonPressed:")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
+        copyrightLabel.hidden = true
+        
+        let queue = NSOperationQueue()
+        queue.addOperationWithBlock() {
+            self.getForecast()
+            
+            NSOperationQueue.mainQueue().addOperationWithBlock(){
+                
+                let range: NSRange = NSMakeRange(1, 1)
+                let indexSet: NSIndexSet = NSIndexSet(indexesInRange: range)
+                self.tableView.reloadSections(indexSet, withRowAnimation: UITableViewRowAnimation.Automatic)
+                self.tableView.reloadData()
+                self.copyrightLabel.hidden = false
+                
+            }
+            
+        }
+        
+        if detailItem?.url == "" {
+            copyrightLabel.text = ""
+            copyrightButtonOutlet.enabled = false
+        }
+        else {
+            let photoName = detailItem?.photoName
+            let photoAuthor = detailItem?.photoAuthor
+            
+            copyrightLabel.text = "\"" + photoName! + "\" by " + photoAuthor! + ", used under CC-BY / Cropped from original"
+            copyrightButtonOutlet.enabled = true
+        }
+        
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+        
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -49,6 +95,34 @@ class ForecastTableViewController: UITableViewController {
         //self.navigationController?.setToolbarHidden(true, animated: false)
     }
     
+    // **********************
+    // MARK: - Button Actions
+    // **********************
+    func helpButtonPressed(barButton: UIBarButtonItem){
+        
+        let alertVC = UIAlertController(title: "Help", message: "Share the current weather or forecast by long-pressing on any of the entries below.", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        let OKAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+        alertVC.addAction(OKAction)
+        
+        self.presentViewController(alertVC, animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func copyrightButtonPressed(sender: AnyObject) {
+        
+        let photoAuthorID = detailItem?.photoAuthorID
+        let photoID = detailItem?.photoID
+        let urlString = "https://flickr.com/photos/" + photoAuthorID! + "/" + photoID! + "/"
+        //let escapedString = urlString.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        let url = NSURL(string: urlString)
+        UIApplication.sharedApplication().openURL(url!)
+        
+    }
+
+    // ****************
+    // MARK: - Settings
+    // ****************
     func loadSettings() -> Int {
         
         var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
@@ -61,6 +135,9 @@ class ForecastTableViewController: UITableViewController {
         
     }
     
+    // ****************
+    // MARK: - Forecast
+    // ****************
     func getForecast() {
         
         let u: String
@@ -129,6 +206,9 @@ class ForecastTableViewController: UITableViewController {
         
     }
     
+    // *********************
+    // MARK: - Error Dialogs
+    // *********************
     func noNetworkErrorDialog() {
         
         let alertController = UIAlertController(title: "No Network Connection", message: "Please check your network connection and try again.", preferredStyle: .Alert)
@@ -155,64 +235,17 @@ class ForecastTableViewController: UITableViewController {
         
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        copyrightLabel.hidden = true
-        
-        let queue = NSOperationQueue()
-        queue.addOperationWithBlock() {
-            self.getForecast()
-            
-            NSOperationQueue.mainQueue().addOperationWithBlock(){
-                
-                let range: NSRange = NSMakeRange(1, 1)
-                let indexSet: NSIndexSet = NSIndexSet(indexesInRange: range)
-                self.tableView.reloadSections(indexSet, withRowAnimation: UITableViewRowAnimation.Automatic)
-                self.tableView.reloadData()
-                self.copyrightLabel.hidden = false
-                
-            }
-            
-        }
-        
-        if detailItem?.url == "" {
-            copyrightLabel.text = ""
-            copyrightButtonOutlet.enabled = false
-        }
-        else {
-            let photoName = detailItem?.photoName
-            let photoAuthor = detailItem?.photoAuthor
-            
-            copyrightLabel.text = "\"" + photoName! + "\" by " + photoAuthor! + ", used under CC-BY / Cropped from original"
-            copyrightButtonOutlet.enabled = true
-        }
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
-    
-    @IBAction func copyrightButtonPressed(sender: AnyObject) {
-        
-        let photoAuthorID = detailItem?.photoAuthorID
-        let photoID = detailItem?.photoID
-        let urlString = "https://flickr.com/photos/" + photoAuthorID! + "/" + photoID! + "/"
-        //let escapedString = urlString.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
-        let url = NSURL(string: urlString)
-        UIApplication.sharedApplication().openURL(url!)
-        
-    }
-
+    // ************
+    // MARK: - Misc
+    // ************
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    // ******************************
     // MARK: - Table view data source
-
+    // ******************************
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
@@ -247,9 +280,13 @@ class ForecastTableViewController: UITableViewController {
         
         let section = indexPath.section
         
+        
         if section == 0 {
             
             let cell = tableView.dequeueReusableCellWithIdentifier("CurrentCell", forIndexPath: indexPath) as! UITableViewCell
+            
+            let LPRecognizer = UILongPressGestureRecognizer(target: self, action: "cellLongPressedActionSection0:")
+            LPRecognizer.minimumPressDuration = 1.0
             
             let row = indexPath.row
             let conditionLabel = cell.contentView.viewWithTag(5) as! UILabel
@@ -269,8 +306,6 @@ class ForecastTableViewController: UITableViewController {
             else {
                 windChillLabel.text = "Feels like: " + windChill + "°" + units
             }
-
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
             
             if detailItem!.image != nil {
                 conditionLabel.textColor = UIColor.whiteColor()
@@ -292,12 +327,17 @@ class ForecastTableViewController: UITableViewController {
                 cell.layer.insertSublayer(overlay, atIndex: 1)
             }
             
+            cell.addGestureRecognizer(LPRecognizer)
+            
             return cell
             
         }
         else {
         
             let cell = tableView.dequeueReusableCellWithIdentifier("ForecastCell", forIndexPath: indexPath) as! UITableViewCell
+            
+            let LPRecognizer = UILongPressGestureRecognizer(target: self, action: "cellLongPressedActionSection1:")
+            LPRecognizer.minimumPressDuration = 1.0
 
             // Configure the cell...
             
@@ -312,13 +352,79 @@ class ForecastTableViewController: UITableViewController {
             lowLabel.text = lows[row] + "°" + units
             conditionLabel.text = conditions[row]
             
-            
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            cell.addGestureRecognizer(LPRecognizer)
             
             return cell
         
         }
 
+    }
+    
+    func cellLongPressedActionSection0(gestureRecognizer: UIGestureRecognizer) {
+        
+        let cell = gestureRecognizer.view as! UITableViewCell
+        
+        var shareString: String
+        
+        let city = self.title
+        let condition = (cell.viewWithTag(5) as! UILabel).text
+        let temp = (cell.viewWithTag(6) as! UILabel).text
+        let wind = (cell.viewWithTag(7) as! UILabel).text
+        let feels = (cell.viewWithTag(8) as! UILabel).text
+        
+        if feels == "" {
+            shareString = "Current weather in \(city!): \(condition!), \(temp!), \(wind!)."
+        }
+        else {
+            shareString = "Current weather in \(city!): \(condition!), \(temp!), \(wind!), \(feels!)."
+        }
+        
+        shareString = shareString + "  Provided by Simple Weather!"
+        socialShare(shareString)
+        
+    }
+    
+    func cellLongPressedActionSection1(gestureRecognizer: UIGestureRecognizer) {
+        
+        let cell = gestureRecognizer.view as! UITableViewCell
+        
+        var shareString: String
+        
+        let city = self.title
+        let day = (cell.viewWithTag(1) as! UILabel).text
+        let high = (cell.viewWithTag(2) as! UILabel).text
+        let low = (cell.viewWithTag(3) as! UILabel).text
+        let condition = (cell.viewWithTag(4) as! UILabel).text
+
+        shareString = "Weather for \(day!) in \(city!): \(condition!) with a high of \(high!) and low of \(low!)."
+        
+        shareString = shareString + "  Provided by Simple Weather!"
+        socialShare(shareString)
+        
+    }
+    
+    func socialShare(shareString: String) {
+        
+        if let websiteToShare = NSURL(string: "https://appsto.re/ca/JqGH7.i") {
+            
+            let objectsToShare = [shareString, websiteToShare]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            activityVC.excludedActivityTypes = [UIActivityTypePrint,
+                UIActivityTypeAssignToContact,
+                UIActivityTypeSaveToCameraRoll,
+                UIActivityTypeAddToReadingList,
+                UIActivityTypePostToFlickr,
+                UIActivityTypePostToVimeo]
+            
+            self.presentViewController(activityVC, animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 
     /*

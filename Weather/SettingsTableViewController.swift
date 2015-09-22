@@ -12,6 +12,9 @@ import MessageUI
 
 class SettingsTableViewController: UITableViewController, SKProductsRequestDelegate, SKPaymentTransactionObserver, MFMailComposeViewControllerDelegate {
     
+    // ******************
+    // MARK: - Properties
+    // ******************
     @IBOutlet weak var IAPButton: UIButton!
     @IBOutlet weak var restoreButton: UIButton!
     @IBOutlet weak var unitSelectorOutlet: UISegmentedControl!
@@ -22,6 +25,9 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
     
     var product_id: NSString?
 
+    // *******************
+    // MARK: - View config
+    // *******************
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,12 +56,27 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        SKPaymentQueue.defaultQueue().removeTransactionObserver(self)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.setToolbarHidden(false, animated: false)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        self.navigationController?.setToolbarHidden(true, animated: false)
+    }
+    
     @IBAction func unitSelectorAction(sender: AnyObject) {
         
         saveSettings()
         
     }
     
+    // ****************
+    // MARK: - Settings
+    // ****************
     func loadSettings() {
         
         var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
@@ -79,14 +100,13 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    override func viewDidDisappear(animated: Bool) {
-        SKPaymentQueue.defaultQueue().removeTransactionObserver(self)
-    }
+
     
     
-    // In-App Purchases
-    
+
+    // *********************
+    // MARK: - Error Dialogs
+    // *********************
     func noNetworkErrorDialog() {
         
         let alertController = UIAlertController(title: "No Network Connection", message: "Please check your network connection and try again.", preferredStyle: .Alert)
@@ -99,6 +119,25 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
         
     }
     
+    func noConfiguredAccountError() {
+        
+        let alertController = UIAlertController(title: "Can't send email", message: "Your device does not have any email accounts configured.  If you wish, you can visit our support page and submit your feedback there.", preferredStyle: .Alert)
+        
+        let OKAction = UIAlertAction(title: "Visit Support Page", style: .Default ) { (action) in
+            UIApplication.sharedApplication().openURL(NSURL(string: "http://evansalter.com/simple-weather-feedback/")!)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Default ) { (action) in
+        }
+        alertController.addAction(OKAction)
+        alertController.addAction(cancelAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+        
+    }
+    
+    // ***********
+    // MARK: - IAP
+    // ***********
     @IBAction func restoreButtonPressed(sender: AnyObject) {
         
         if IJReachability.isConnectedToNetwork() {
@@ -208,15 +247,10 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
             }
         }
     }
-    
-    override func viewWillAppear(animated: Bool) {
-        self.navigationController?.setToolbarHidden(false, animated: false)
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        self.navigationController?.setToolbarHidden(true, animated: false)
-    }
-    
+
+    // *********************
+    // MARK: - Support Email
+    // *********************
     @IBAction func supportButtonPressed(sender: UIBarButtonItem) {
         
         if MFMailComposeViewController.canSendMail() {
@@ -242,21 +276,6 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
         
     }
     
-    func noConfiguredAccountError() {
-
-        let alertController = UIAlertController(title: "Can't send email", message: "Your device does not have any email accounts configured.  If you wish, you can visit our support page and submit your feedback there.", preferredStyle: .Alert)
-        
-        let OKAction = UIAlertAction(title: "Visit Support Page", style: .Default ) { (action) in
-            UIApplication.sharedApplication().openURL(NSURL(string: "http://evansalter.com/simple-weather-feedback/")!)
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Default ) { (action) in
-        }
-        alertController.addAction(OKAction)
-        alertController.addAction(cancelAction)
-        
-        self.presentViewController(alertController, animated: true, completion: nil)
-    
-    }
     
     func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
         controller.dismissViewControllerAnimated(true, completion: nil)

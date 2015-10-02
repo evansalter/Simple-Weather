@@ -91,12 +91,12 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
     /**
         Loads the in-app purchase indicator from user defaults
     
-        :returns: true if IAP has been purchased, false otherwise
+        - returns: true if IAP has been purchased, false otherwise
     */
     func loadSettings() -> Bool {
         
-        var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        if var savedData:Bool = (defaults.objectForKey("IAP") as? Bool) {
+        let defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        if let savedData:Bool = (defaults.objectForKey("IAP") as? Bool) {
             return savedData
         }
         else {
@@ -183,9 +183,9 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         
         let submitAction = UIAlertAction(title: "Submit", style: .Default) { (_) in
             
-            let cityTextField = alertController.textFields![0] as! UITextField
+            let cityTextField = alertController.textFields![0] 
             
-            self.getPlaceName(cityTextField.text)
+            self.getPlaceName(cityTextField.text!)
             
         }
         
@@ -218,7 +218,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         - If one location is returned, a confirmation dialog appears to confirm it is the correct location
         - If multiple locations are returned, a list showing them all appears and the user selects the correct one
     
-        :param: place String containing the input from the user
+        - parameter place: String containing the input from the user
     */
     func getPlaceName(place: String) {
         
@@ -228,7 +228,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         if results == nil {
             self.noNetworkErrorDialog()
         }
-        else if count(place) < 4 {
+        else if place.characters.count < 4 {
             self.fourCharactersErrorDialog()
         }
         else if results?.valueForKeyPath("query.count") as! Double == 1 {
@@ -236,7 +236,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
             let cityName = queryResults?.valueForKeyPath("place.name") as! String
             let countryName = queryResults?.valueForKeyPath("place.country.content") as! String
             var woeid = queryResults?.valueForKeyPath("place.woeid") as! String
-            if woeid.toInt() == 91982014 {
+            if Int(woeid) == 91982014 {
                 woeid = "3369"
             }
             if let provName = queryResults?.valueForKeyPath("place.admin1.content") as? String {
@@ -262,9 +262,9 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
     /**
         Finds an image from Flickr for the newly added location based on image title, usage license, and tags.  The results are sorted by interestingness and the top one is used.
     
-        :param: place String containing the name of the location
+        - parameter place: String containing the name of the location
     
-        :returns: NSDictionary containing url, author, name, ID, and author ID of the photo.  If no photo was found, all fields in the NSDictionary are empty
+        - returns: NSDictionary containing url, author, name, ID, and author ID of the photo.  If no photo was found, all fields in the NSDictionary are empty
     */
     func getImage(place: String) -> NSDictionary? {
         
@@ -275,15 +275,15 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         if results?.valueForKeyPath("query.count") as! Double >= 1 {
             let queryResults = results?.valueForKeyPath("query.results") as! NSDictionary?
             let photoID = queryResults?.valueForKeyPath("photo.id") as! String
-            println(photoID)
+            print(photoID)
             let photoName = queryResults?.valueForKeyPath("photo.title") as! String
             let photoAuthorID = queryResults?.valueForKeyPath("photo.owner") as! String
-            println(photoAuthorID)
+            print(photoAuthorID)
             
             let results2 = YQL.query("SELECT * FROM flickr.people.info2 WHERE api_key=\"5182195e863cee6875590c57b381657f\" and user_id=\"" + photoAuthorID + "\"")
             let queryResults2 = results2?.valueForKeyPath("query.results") as! NSDictionary?
             let photoAuthor = queryResults2?.valueForKeyPath("person.username") as! String
-            println(photoAuthor)
+            print(photoAuthor)
             
             let results3 = YQL.query("SELECT * FROM flickr.photos.sizes WHERE photo_id=\"" + photoID + "\" and api_key=\"5182195e863cee6875590c57b381657f\"")
             
@@ -312,9 +312,9 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         - "Add" button
         - "Cancel" button
     
-        :param: alertString String containing message to display to the user
-        :param: name String containing the name of the city
-        :param: woeid String containing the woeid of the city
+        - parameter alertString: String containing message to display to the user
+        - parameter name: String containing the name of the city
+        - parameter woeid: String containing the woeid of the city
     */
     func confirmationDialog(alertString: String, name: String, woeid: String) {
         
@@ -353,8 +353,8 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
     /**
         Adds the selected city to the table and loads in the image
     
-        :param: name String containing the name of the city
-        :param: woeid String containing the woeid of the city
+        - parameter name: String containing the name of the city
+        - parameter woeid: String containing the woeid of the city
     */
     func addLocation(name: String, woeid: String) {
         
@@ -463,7 +463,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow() {
+            if let indexPath = self.tableView.indexPathForSelectedRow {
                 let object = allLocations[indexPath.row]
             (segue.destinationViewController as! ForecastTableViewController).detailItem = object
             }
@@ -507,7 +507,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
 
         let object = allLocations[indexPath.row] as Location
 //        cell.textLabel!.text = object.name

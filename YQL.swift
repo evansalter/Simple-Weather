@@ -13,18 +13,29 @@ struct YQL {
     
     static func query(statement:String) -> NSDictionary? {
         
-        if IJReachability.isConnectedToNetwork() {
+        if (Reachability.reachabilityForInternetConnection()?.isReachable() != nil) {
             
-            var escapedStatement = statement.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+            let escapedStatement = statement.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
             let query = "\(prefix)\(escapedStatement!)"
             
             var results:NSDictionary? = nil
             var jsonError:NSError? = nil
             
-            let jsonData = NSData(contentsOfURL: NSURL(string: query)!, options: NSDataReadingOptions.DataReadingMappedIfSafe, error: &jsonError)
+            let jsonData: NSData?
+            do {
+                jsonData = try NSData(contentsOfURL: NSURL(string: query)!, options: NSDataReadingOptions.DataReadingMappedIfSafe)
+            } catch let error as NSError {
+                jsonError = error
+                jsonData = nil
+            }
             
             if jsonData != nil {
-                results = NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions.AllowFragments, error: &jsonError) as! NSDictionary?
+                do {
+                    try results = NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions.AllowFragments) as? NSDictionary
+                }
+                catch {
+                    print("error with YQL request")
+                }
             }
             if jsonError != nil {
                 NSLog( "ERROR while fetching/deserializing YQL data. Message \(jsonError!)" )

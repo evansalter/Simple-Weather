@@ -125,8 +125,8 @@ class ForecastTableViewController: UITableViewController {
     // ****************
     func loadSettings() -> Int {
         
-        var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        if var savedData:Int = (defaults.objectForKey("unitSelector") as? Int) {
+        let defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        if let savedData:Int = (defaults.objectForKey("unitSelector") as? Int) {
             return savedData
         }
         else {
@@ -283,7 +283,7 @@ class ForecastTableViewController: UITableViewController {
         
         if section == 0 {
             
-            let cell = tableView.dequeueReusableCellWithIdentifier("CurrentCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("CurrentCell", forIndexPath: indexPath) 
             
             let LPRecognizer = UILongPressGestureRecognizer(target: self, action: "cellLongPressedActionSection0:")
             LPRecognizer.minimumPressDuration = 1.0
@@ -334,7 +334,7 @@ class ForecastTableViewController: UITableViewController {
         }
         else {
         
-            let cell = tableView.dequeueReusableCellWithIdentifier("ForecastCell", forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("ForecastCell", forIndexPath: indexPath) 
             
             let LPRecognizer = UILongPressGestureRecognizer(target: self, action: "cellLongPressedActionSection1:")
             LPRecognizer.minimumPressDuration = 1.0

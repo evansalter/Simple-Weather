@@ -66,7 +66,7 @@ class Location: NSObject {
             return["name":name,"woeid":woeid]
         }
         else {
-            let imageData: NSData = UIImagePNGRepresentation(image)
+            let imageData: NSData = UIImagePNGRepresentation(image!)!
             return["name":name,"woeid":woeid,"imageData":imageData,"photoAuthor":photoAuthor,"photoName":photoName,"photoID":photoID,"photoAuthorID":photoAuthorID,"url":url]
         }
     }
@@ -80,12 +80,12 @@ class Location: NSObject {
     }
     
     class func loadLocations(){
-        var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        var savedData:[NSDictionary]? = defaults.objectForKey(kAllLocations) as? [NSDictionary]
+        let defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        let savedData:[NSDictionary]? = defaults.objectForKey(kAllLocations) as? [NSDictionary]
         if let data:[NSDictionary] = savedData {
             for var i:Int = 0; i < data.count; i++ {
-                var l:Location = Location()
-                l.setValuesForKeysWithDictionary(data[i] as [NSObject : AnyObject])
+                let l:Location = Location()
+                l.setValuesForKeysWithDictionary(data[i] as! [String : AnyObject])
                 if l.imageData != nil {
                     l.image = UIImage(data: l.imageData!)
                 }

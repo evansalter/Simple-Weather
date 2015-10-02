@@ -23,7 +23,7 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
     let kUnitSelector = "unitSelector"
     let kIAP = "IAP"
     
-    var product_id: NSString?
+    var product_id: NSString = NSString()
 
     // *******************
     // MARK: - View config
@@ -79,11 +79,11 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
     // ****************
     func loadSettings() {
         
-        var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        if var savedData:Int = (defaults.objectForKey(kUnitSelector) as? Int) {
+        let defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        if let savedData:Int = (defaults.objectForKey(kUnitSelector) as? Int) {
             unitSelectorOutlet.selectedSegmentIndex = savedData
         }
-        if var savedData2:Bool = (defaults.objectForKey(kIAP) as? Bool) {
+        if let savedData2:Bool = (defaults.objectForKey(kIAP) as? Bool) {
             IAPPurchased = savedData2
         }
         
@@ -140,13 +140,14 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
     // ***********
     @IBAction func restoreButtonPressed(sender: AnyObject) {
         
-        if IJReachability.isConnectedToNetwork() {
+        if (Reachability.reachabilityForInternetConnection()?.isReachable() != nil) {
+
         
             if (SKPaymentQueue.canMakePayments()) {
                 SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
             }
             else {
-                println("Cannot make purchases")
+                print("Cannot make purchases")
             }
             
         }
@@ -159,19 +160,20 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
     
     @IBAction func purchaseButtonPressed(sender: AnyObject) {
         
-        if IJReachability.isConnectedToNetwork() {
+        if (Reachability.reachabilityForInternetConnection()?.isReachable() != nil) {
         
-            println("About to fetch the products")
+            print("About to fetch the products")
             // We check that we are allowed to make the purchase.
             if SKPaymentQueue.canMakePayments() {
-                var productID:NSSet = NSSet(object: self.product_id!);
-                var productsRequest:SKProductsRequest = SKProductsRequest(productIdentifiers: productID as Set<NSObject>);
+//                let productID:NSSet = NSSet(object: self.product_id!);
+                let productID:Set<String> = Set<String>(arrayLiteral: (self.product_id as? String)!)
+                let productsRequest:SKProductsRequest = SKProductsRequest(productIdentifiers: productID as Set<String>);
                 productsRequest.delegate = self as SKProductsRequestDelegate
                 productsRequest.start()
-                println("Fetching Products")
+                print("Fetching Products")
             }
             else {
-                println("Cannot make purchases")
+                print("Cannot make purchases")
             }
             
         }
@@ -181,35 +183,35 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
         
     }
     
-    func productsRequest(request: SKProductsRequest!, didReceiveResponse response: SKProductsResponse!) {
-        println("got the request from Apple")
-        var count: Int = response.products.count
+    func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
+        print("got the request from Apple")
+        let count: Int = response.products.count
         if count > 0 {
             var validProducts = response.products
-            var validProduct: SKProduct = response.products[0] as! SKProduct
+            let validProduct: SKProduct = response.products[0] 
             if validProduct.productIdentifier == self.product_id {
-                println(validProduct.localizedTitle)
-                println(validProduct.localizedDescription)
-                println(validProduct.price)
+                print(validProduct.localizedTitle)
+                print(validProduct.localizedDescription)
+                print(validProduct.price)
                 buyProduct(validProduct)
             }
             else {
-                println(validProduct.productIdentifier)
+                print(validProduct.productIdentifier)
             }
         }
         else {
-            println("nothing")
+            print("nothing")
         }
     }
     
     func buyProduct(product: SKProduct) {
-        println("Sending the Payment Request to Apple")
-        var payment = SKPayment(product: product)
+        print("Sending the Payment Request to Apple")
+        let payment = SKPayment(product: product)
         SKPaymentQueue.defaultQueue().addPayment(payment)
     }
     
-    func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!) {
-        println("Received Payment Transaction Response from Apple")
+    func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        print("Received Payment Transaction Response from Apple")
         
         for transaction:AnyObject in transactions {
             if let trans:SKPaymentTransaction = transaction as? SKPaymentTransaction {
@@ -219,12 +221,12 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
                     saveSettings()
                     //self.tableView.reloadData()
                     viewDidLoad()
-                    println("Product Purchased")
+                    print("Product Purchased")
                     SKPaymentQueue.defaultQueue().finishTransaction(transaction as! SKPaymentTransaction)
                     
                     break;
                 case .Failed:
-                    println("Purchase Failed")
+                    print("Purchase Failed")
                     IAPPurchased = false
                     saveSettings()
                     //purchase failed
@@ -232,7 +234,7 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
                     
                     break;
                 case .Restored:
-                    println("Purchase Restored")
+                    print("Purchase Restored")
                     IAPPurchased = true
                     saveSettings()
                     // self.tableView.reloadData()
@@ -277,7 +279,7 @@ class SettingsTableViewController: UITableViewController, SKProductsRequestDeleg
     }
     
     
-    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
     

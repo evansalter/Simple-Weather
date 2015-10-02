@@ -29,8 +29,8 @@ class DetailViewController: UITableViewController {
     // ****************
     func loadSettings() -> Int {
         
-        var defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        if var savedData:Int = (defaults.objectForKey("settings") as? Int) {
+        let defaults:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        if let savedData:Int = (defaults.objectForKey("settings") as? Int) {
             return savedData
         }
         else {
@@ -55,10 +55,10 @@ class DetailViewController: UITableViewController {
         
         let results = YQL.query("SELECT * FROM weather.forecast WHERE woeid=" + item.woeid + " and u=\"" + u + "\"")
         let queryResults = results?.valueForKeyPath("query.results") as! NSDictionary?
-        println(queryResults)
-        println()
-        println(queryResults?.valueForKeyPath("channel.item.condition.text") as! String)
-        println(queryResults?.valueForKeyPath("channel.item.condition.temp") as! String)
+        print(queryResults)
+        print("")
+        print(queryResults?.valueForKeyPath("channel.item.condition.text") as! String)
+        print(queryResults?.valueForKeyPath("channel.item.condition.temp") as! String)
         
         return queryResults?.valueForKeyPath("channel.item.forecast.day") as! [String]
         
@@ -94,7 +94,7 @@ class DetailViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
         
         let forecast = getForecast()
         let object = forecast[indexPath.row]

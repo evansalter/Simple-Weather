@@ -19,7 +19,7 @@
 		7D5071901B0FD5AE00E17A18 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D50718F1B0FD5AE00E17A18 /* SettingsTableViewController.swift */; };
 		7DAAA1FA1B13C5EB0080BA85 /* ForecastTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAAA1F91B13C5EB0080BA85 /* ForecastTableViewController.swift */; };
 		7DCAAEE81B14E28700BFC8A7 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DCAAEE71B14E28700BFC8A7 /* iAd.framework */; };
-		7DDA1E891BBEDF3800251858 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDA1E881BBEDF3800251858 /* Reachability.swift */; settings = {ASSET_TAGS = (); }; };
+		7DDA1E891BBEDF3800251858 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDA1E881BBEDF3800251858 /* Reachability.swift */; };
 		7DF3C5F41B2F6C3400B91125 /* ResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF3C5F31B2F6C3400B91125 /* ResultsTableViewController.swift */; };
 		7DF3C5F61B2F7A0300B91125 /* WriteBackProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF3C5F51B2F7A0300B91125 /* WriteBackProtocol.swift */; };
 /* End PBXBuildFile section */
@@ -187,7 +187,7 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Evan Salter";
 				TargetAttributes = {
 					7D3D5FF51B0C3771008A43EE = {
@@ -312,6 +312,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -381,6 +382,7 @@
 				INFOPLIST_FILE = Weather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.salter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -395,6 +397,7 @@
 				INFOPLIST_FILE = Weather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.salter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -414,6 +417,7 @@
 				);
 				INFOPLIST_FILE = WeatherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.salter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Weather.app/Weather";
 			};
@@ -429,6 +433,7 @@
 				);
 				INFOPLIST_FILE = WeatherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.salter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Weather.app/Weather";
 			};

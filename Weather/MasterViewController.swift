@@ -43,7 +43,7 @@ class MasterViewController: UITableViewController, writeValueBackDelegate {
         //GAD banner
         if IAPPurchased == nil || IAPPurchased == false {
             bannerView.hidden = false
-            bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+            bannerView.adUnitID = "ca-app-pub-4086031461257931/6337652004"
             bannerView.rootViewController = self
             bannerView.loadRequest(GADRequest())
             self.navigationController?.toolbar.addSubview(bannerView)

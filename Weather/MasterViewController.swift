@@ -8,15 +8,17 @@
 
 import UIKit
 import iAd
+import GoogleMobileAds
 
-class MasterViewController: UITableViewController, ADBannerViewDelegate, writeValueBackDelegate {
+class MasterViewController: UITableViewController, writeValueBackDelegate {
     
     // ******************
     // MARK: - Properties
     // ******************
 
-    // iAd banner view
-    var bannerView = ADBannerView(adType: ADAdType.Banner)
+//    @IBOutlet weak var bannerView: GADBannerView!
+//    var bannerView = GADBannerView(adSize: GADAdSize(size: CGSize(width: 320, height: 50), flags: 0), origin: CGPoint(x: 0, y: 200))
+    var bannerView: GADBannerView = GADBannerView()
     
     // Bool stating whether the in-app purchase to remove ads has been purchased
     var IAPPurchased:Bool?
@@ -35,23 +37,21 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        bannerView.frame = CGRectMake(0, -50, self.view.bounds.width, 50)
         IAPPurchased = loadSettings()
         
-        //iAd banner
+        //GAD banner
         if IAPPurchased == nil || IAPPurchased == false {
             bannerView.hidden = false
-            self.canDisplayBannerAds = true
+            bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+            bannerView.rootViewController = self
+            bannerView.loadRequest(GADRequest())
+            self.navigationController?.toolbar.addSubview(bannerView)
         }
         else {
-            self.canDisplayBannerAds = false
             bannerView.hidden = true
         }
-        self.bannerView.delegate = self
-        self.bannerView.hidden = true
-        
-//        println(self.bannerView.bounds.height.description)
-//        self.bannerView.bounds = CGRect(x: 0.0, y: 0.0, width: self.bannerView.bounds.width, height: 22.0)
-        
+
         Location.loadLocations()
         locationTable = self.tableView
         // Do any additional setup after loading the view, typically from a nib.
@@ -68,18 +68,18 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         IAPPurchased = loadSettings()
         
         if IAPPurchased != nil && IAPPurchased == true {
-            self.canDisplayBannerAds = false
-            //bannerView?.removeFromSuperview()
-            bannerView?.hidden = true
-            bannerView = nil
+            bannerView.removeFromSuperview()
+            bannerView.hidden = true
         }
         else {
-            bannerView?.hidden = false
-            self.canDisplayBannerAds = true
+            bannerView.hidden = false
         }
     }
     
     override func viewWillDisappear(animated: Bool) {
+        
+        bannerView.hidden = true
+        
         self.navigationController?.setToolbarHidden(true, animated: false)
     }
 
@@ -151,23 +151,23 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
     // MARK: - iAd
     // ***********
     
-    func bannerViewDidLoadAd(banner: ADBannerView!) {
-        
-        if IAPPurchased != nil && IAPPurchased == true {
-            self.bannerView?.hidden = true
-        }
-        else {
-            self.bannerView?.hidden = false
-        }
-    }
-    
-    func bannerViewActionShouldBegin(banner: ADBannerView!, willLeaveApplication willLeave: Bool) -> Bool {
-        return willLeave
-    }
-    
-    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
-        self.bannerView?.hidden = true
-    }
+//    func bannerViewDidLoadAd(banner: ADBannerView!) {
+//        
+//        if IAPPurchased != nil && IAPPurchased == true {
+//            self.bannerView?.hidden = true
+//        }
+//        else {
+//            self.bannerView?.hidden = false
+//        }
+//    }
+//    
+//    func bannerViewActionShouldBegin(banner: ADBannerView!, willLeaveApplication willLeave: Bool) -> Bool {
+//        return willLeave
+//    }
+//    
+//    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+//        self.bannerView?.hidden = true
+//    }
     
     // ************************
     // MARK: - Adding Locations
@@ -285,7 +285,7 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
             let photoAuthor = queryResults2?.valueForKeyPath("person.username") as! String
             print(photoAuthor)
             
-            let results3 = YQL.query("SELECT * FROM flickr.photos.sizes WHERE photo_id=\"" + photoID + "\" and api_key=\"5182195e863cee6875590c57b381657f\"")
+            let results3 = YQL.query("SELECT * FROM flickr.photos.sizes WHERE photo_id=" + photoID + " and api_key=\"5182195e863cee6875590c57b381657f\"")
             
             let queryResults3 = results3?.valueForKeyPath("query.results") as! NSDictionary?
             let urls = queryResults3?.valueForKeyPath("size.source") as! NSArray
@@ -507,28 +507,34 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
+        
+//        if indexPath.row == allLocations.count {
+//            let cell = tableView.dequeueReusableCellWithIdentifier("Footer", forIndexPath: indexPath)
+////            return cell
+//        }
+//        else {
+            let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
 
-        let object = allLocations[indexPath.row] as Location
-//        cell.textLabel!.text = object.name
-//        cell.textLabel!.textColor = UIColor.whiteColor()
-        
-        let label: UILabel = cell.viewWithTag(1) as! UILabel
-        label.text = object.name
-        label.textColor = UIColor.whiteColor()
-        
-        let imageView: UIImageView = UIImageView(image: object.image)
-        imageView.contentMode = .ScaleAspectFill
-        imageView.layer.masksToBounds = true
-        cell.backgroundView = imageView
-        
-        let gradient = CAGradientLayer()
-        gradient.frame = cell.bounds
-        gradient.colors = [UIColor.clearColor().CGColor, UIColor.clearColor(), UIColor.blackColor().CGColor]
-        cell.layer.insertSublayer(gradient, atIndex: 1)
-        
-        return cell
-    }
+            let object = allLocations[indexPath.row] as Location
+    //        cell.textLabel!.text = object.name
+    //        cell.textLabel!.textColor = UIColor.whiteColor()
+            
+            let label: UILabel = cell.viewWithTag(1) as! UILabel
+            label.text = object.name
+            label.textColor = UIColor.whiteColor()
+            
+            let imageView: UIImageView = UIImageView(image: object.image)
+            imageView.contentMode = .ScaleAspectFill
+            imageView.layer.masksToBounds = true
+            cell.backgroundView = imageView
+            
+            let gradient = CAGradientLayer()
+            gradient.frame = cell.bounds
+            gradient.colors = [UIColor.clearColor().CGColor, UIColor.clearColor(), UIColor.blackColor().CGColor]
+            cell.layer.insertSublayer(gradient, atIndex: 1)
+            return cell
+//        }
+}
 
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
@@ -558,6 +564,17 @@ class MasterViewController: UITableViewController, ADBannerViewDelegate, writeVa
         allLocations.removeAtIndex(sourceIndexPath.row)
         allLocations.insert(item, atIndex: destinationIndexPath.row)
         Location.saveLocations()
+    }
+    
+    override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        // enter your code here. Needs to return height of the footer
+        return 50
+    }
+    
+    override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let backgroundView = UIView()
+        backgroundView.tintColor = UIColor.whiteColor()
+        return backgroundView
     }
 
 
